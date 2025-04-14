@@ -7,6 +7,5 @@ Magan Jaye Greenfield
 Kathryn Hoeffleur
 Minjun Kim
 Aidan Joseph Sosnowski
-Trello Board:
 
-https://trello.com/invite/b/67fd3d6200421586b3a9b52c/ATTIcdd4a4edebb21643858b5ee3a0b31117F94375CE/group2-project
+Trello Board: https://trello.com/invite/b/67fd3d6200421586b3a9b52c/ATTIcdd4a4edebb21643858b5ee3a0b31117F94375CE/group2-project
