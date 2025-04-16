@@ -87,4 +87,13 @@ class ViewsTests(TestCase):
         self.assertContains(response, 'Sign in as Admin')
 
     def test_report_page(self):
+        # test that report page loads and shows enrollment data
         response = self.client.get('/report/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'report.html')
+        self.assertContains(response, 'Enrollment Statistics')
+        self.assertContains(response, 'Total Courses Offered')
+        self.assertContains(response, 'Total Class Enrollment')
+        self.assertContains(response, 'Approved')
+        self.assertContains(response, 'Pending')
+        self.assertContains(response, 'Back to Admin')
