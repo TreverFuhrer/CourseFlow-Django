@@ -59,3 +59,26 @@ class EnrollmentTests(TestCase):
     def test_default_status_is_pending(self):
         # when you enroll, it should start as "pending"
         self.assertEqual(self.enrollment.status, 'pending')
+
+# testing homepage and report page
+class ViewsTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.prof = User.objects.create(username='daprof', password='testpass')
+        self.student = User.objects.create(username='studenttt', password='testpass')
+        self.course = Course.objects.create(
+            title='CS361',
+            description='Software Engineering',
+            seat_limit=30,
+            instructor=self.prof
+        )
+
+        # give some enrollments different statuses
+        Enrollment.objects.create(student=self.student, course=self.course, status='approved')
+        Enrollment.objects.create(student=self.student, course=self.course, status='pending')
+
+    def test_homepage(self):
+        response = self.client.get('/')
+
+    def test_report_page(self):
+        response = self.client.get('/report/')
