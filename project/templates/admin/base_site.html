@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .report-button {
+            margin-left: 15px;
+            background-color: #417690;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .report-button:hover {
+            background-color: #00796B;
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+    {{ block.super }}
+    <a href="/report/" class="report-button">View Enrollment Report</a>
+{% endblock %}

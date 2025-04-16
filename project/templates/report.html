@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Enrollment Report</title>
+</head>
+<body>
+    <h1>Enrollment Statistics</h1>
+    <p><strong>Total Courses Offered: </strong>{{ courseCount }}</p>
+    <p><strong>Total Class Enrollment: </strong>{{ enrollment }}</p>
+    <h2>Enrollment Status</h2>
+    <ul>
+      {% for i in status %}
+        <li>{{i.status|capfirst }}: {{i.count}}</li>
+      {% empty %}
+        <li>No enrollment data available.</li>
+      {% endfor %}
+    </ul>
+
+    <p><a href="/admin/">Back to Admin</a> </p>
+</body>
+</html>
