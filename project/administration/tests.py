@@ -78,7 +78,13 @@ class ViewsTests(TestCase):
         Enrollment.objects.create(student=self.student, course=self.course, status='pending')
 
     def test_homepage(self):
+        # test that homepage loads and has expected content
         response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        self.assertContains(response, 'Welcome to the Enrollment Management System')
+        self.assertContains(response, 'Username:')
+        self.assertContains(response, 'Sign in as Admin')
 
     def test_report_page(self):
         response = self.client.get('/report/')
