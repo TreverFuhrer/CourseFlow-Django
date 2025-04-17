@@ -97,3 +97,36 @@ class ViewsTests(TestCase):
         self.assertContains(response, 'Approved')
         self.assertContains(response, 'Pending')
         self.assertContains(response, 'Back to Admin')
+
+class AdminAcceptanceTests(TestCase):
+    def setUp(self):
+        # create an admin user for testing
+        from django.contrib.auth.models import User
+
+        # use the existing admin from admin.py
+        if not User.objects.filter(username='admin').exists():
+           User.objects.create_superuser(
+               username='admin',
+               email='admin@gamil.com',
+               password='123456'
+           )
+
+        # Set up test client
+        self.client = Client()
+
+    def test_admin_login_success(self):
+        """Test successful admin login"""
+        # Login with admin credentials
+        login_successful = self.client.login(username='admin', password='123456')
+        self.assertTrue(login_successful)
+
+        # access admin page after Login
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_login_wrong_password(self):
+        """Test admin login with wrong password"""
+        # Attempt admin Login with wrong password
+        login_successful = self.client.login(username='admin', password='wrong password')
+        self.assertFalse(login_successful)
+
