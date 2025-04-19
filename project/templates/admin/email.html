@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Email</title>
+</head>
+<body>
+    <h1>Admin Email</h1>
+
+    <h2>Write New Email</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+
+    <h2>Old Mail</h2>
+    <ul>
+        {% for i in sent %}
+            <li>
+                <strong>{{ i.date|date:"Y-m-d" }}</strong> -> {{ i.email }}: {{ i.subject }}
+            </li>
+        {% empty %}
+            <li>No messages</li>
+        {% endfor %}
+    </ul>
+    <p><a href="/admin/">Back to Admin Home</a></p>
+</body>
+</html>
