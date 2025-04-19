@@ -15,8 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path
-from administration.views import home, report
+from administration.views import home, report, email
 # If this doesn't work right click project folder
 # Mark directory as source
 # File, invalidate caches, restart pycharm
@@ -24,5 +25,6 @@ from administration.views import home, report
 urlpatterns = [
     path('', home, name='home'),
     path('report/', report, name='report'),
+    path('admin/email/', staff_member_required(email), name='admin-email'),
     path('admin/', admin.site.urls),
 ]
