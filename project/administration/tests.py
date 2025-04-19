@@ -110,9 +110,9 @@ class AdminAcceptanceTests(TestCase):
                email='admin@gamil.com',
                password='123456'
            )
+        self.client = Client()
 
         # Set up test client
-        self.client = Client()
 
     def test_admin_login_success(self):
         """Test successful admin login"""
@@ -130,5 +130,175 @@ class AdminAcceptanceTests(TestCase):
         login_successful = self.client.login(username='admin', password='wrong password')
         self.assertFalse(login_successful)
 
-        
 
+
+# Admin Course management tests
+class AdminCourseManagementTests(TestCase):
+    def setUp(self):
+        # create admin user for testing
+        from django.contrib.auth.models import User
+
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@gamil.com',
+                password='<123456>'
+            )
+
+        # create instructor user
+        self.instructor = User.objects.create(
+            username='instructor',
+            email='instructor@example.com',
+            password='<111111>'
+        )
+
+        # test course
+        self.course = Course.objects.create(
+            title='Test Course',
+            description='This is a test course',
+            seat_limit=30,
+            instructor=self.instructor
+        )
+
+        # login as admin
+        self.clinet = Client()
+        self.client.login(username='admin', password='123456')
+
+
+    def test_course_creation(self):
+        """Test course creation through admin interface"""
+
+        initial_count = Course.objects.count()
+
+        course_data = {
+            'title': 'Test Course',
+            'description': 'This is a test course',
+            'seat_limit': 30,
+            'instructor': self.instructor.id
+        }
+
+        response = self.client.post('/admin/administration/course/add/', course_data, follow=True)
+
+        # verify course was crated
+        self.assertEqual(Course.objects.count(), initial_count + 1)
+        self.assertTrue(Course.objects.filter(title='Test Course').exists())
+
+    def test_course_edit(self):
+        """Test course edit through admin interface"""
+
+        updated_data = {
+            'title': 'Updated Course Title',
+            'description': 'Updated Course Description',
+            'seat_limit': 35,
+            'instructor': self.instructor.id
+        }
+
+        response = self.client.post(f'/admin/administration/course/{self.course.id}/change/', updated_data, follow=True)
+
+        # verify course was updated
+        updated_course = Course.objects.get(id=self.course.id)
+        self.assertEqual(updated_course.title, 'Updated Course Title')
+        self.assertEqual(updated_course.description, 'Updated Course Description')
+        self.assertEqual(updated_course.seat_limit, 35)
+
+    def test_course_prerequisites(self):
+        """Test setting course prerequisites"""
+
+        prereq_course = Course.objects.create(
+            title='Prerequisites Course',
+            description='This is Prerequisites Course',
+            seat_limit=25,
+            instructor=self.instructor
+        )
+
+        self.course.prerequisites.add(prereq_course)
+        self.assertIn(prereq_course, self.course.prerequisites.all())
+
+    def test_course_deletion(self):
+        """Test course deletion through admin interface"""
+        # count courses before deletion
+        initial_count = Course.objects.count()
+
+        response = self.client.post(f'/admin/administration/course/{self.course.id}/delete/', {'post: yes'}, follow=True)
+
+        self.assertEqual(Course.objects.count(), initial_count - 1)
+        self.assertTrue(Course.objects.filter(id=self.course.id).exists())
+
+# Admin Enrollment Management tests
+class AdminEnrollmentTests(TestCase):
+    def setUp(self):
+
+        from django.contrib.auth.models import User
+
+        # Admin user
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@gamil.com',
+                password='<123456>'
+            )
+        # student user
+        self.student = User.objects.create_user(
+            username='student',
+            email='student@example.com',
+            password='<222222>'
+        )
+
+        # Instructor user
+        self.instructor = User.objects.create_user(
+            username='instructor',
+            email='instructor@example.com',
+            password='<333333>'
+        )
+
+        # test courses
+        self.course = Course.objects.create(
+            title='Test Course',
+            description='This is a test course',
+            seat_limit=30,
+            instructor=self.instructor
+        )
+
+        self.enrollment = Enrollment.objects.create(
+            student=self.student,
+            course=self.course,
+            status='pending'
+        )
+
+        self.client = Client()
+        self.client.login(username='admin', password='123456')
+
+
+    def test_approve_enrollment(self):
+        """Test approving student enrollment"""
+
+        enrollment_data = {
+            'student': self.student.id,
+            'course': self.course.id,
+            'status': 'approved'
+        }
+
+        # Update enrollment through admin interface
+        response = self.client.post(f'/admin/administration/enrollment/{self.enrollment.id}/change/', enrollment_data, follow=True)
+
+        # verify enorllmment was approved
+        updated_enrollment = Enrollment.objects.get(id=self.enrollment.id)
+        self.assertEqual(updated_enrollment.status, 'approved')
+
+    def test_reject_enrollment(self):
+        """Test rejecting student enrollment"""
+        enrollment_data = {
+            'student': self.student.id,
+            'course': self.course.id,
+            'status': 'rejected'
+        }
+
+        #update
+        response = self.client.post(f'/admin/administration/enrollment/{self.enrollment.id}/change/', enrollment_data, follow=True)
+
+        updated_enrollment = Enrollment.objects.get(id=self.enrollment.id)
+        self.assertEqual(updated_enrollment.status, 'rejected')
+
+
+# Admin Email Tests
+#class AdminEmailTests(TestCase)
