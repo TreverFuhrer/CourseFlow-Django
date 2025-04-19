@@ -130,3 +130,5 @@ class AdminAcceptanceTests(TestCase):
         login_successful = self.client.login(username='admin', password='wrong password')
         self.assertFalse(login_successful)
 
+        
+
