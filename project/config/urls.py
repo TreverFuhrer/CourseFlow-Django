@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from administration.views import home, report
+# If this doesn't work right click project folder
+# Mark directory as source
+# File, invalidate caches, restart pycharm
 
 urlpatterns = [
     path('', home, name='home'),
