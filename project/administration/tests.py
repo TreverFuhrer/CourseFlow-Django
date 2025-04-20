@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
-from .models import Course, Enrollment
+from .models import Course, Enrollment, adminEmail
 
 User = get_user_model()
 
@@ -132,6 +132,7 @@ class AdminAcceptanceTests(TestCase):
 
 
 
+## this class will
 # Admin Course management tests
 class AdminCourseManagementTests(TestCase):
     def setUp(self):
@@ -142,7 +143,7 @@ class AdminCourseManagementTests(TestCase):
             User.objects.create_superuser(
                 username='admin',
                 email='admin@gamil.com',
-                password='<123456>'
+                password='123456'
             )
 
         # create instructor user
@@ -219,10 +220,10 @@ class AdminCourseManagementTests(TestCase):
         # count courses before deletion
         initial_count = Course.objects.count()
 
-        response = self.client.post(f'/admin/administration/course/{self.course.id}/delete/', {'post: yes'}, follow=True)
+        response = self.client.post(f'/admin/administration/course/{self.course.id}/delete/', {'post': 'yes'}, follow=True)
 
         self.assertEqual(Course.objects.count(), initial_count - 1)
-        self.assertTrue(Course.objects.filter(id=self.course.id).exists())
+        self.assertFalse(Course.objects.filter(id=self.course.id).exists())
 
 # Admin Enrollment Management tests
 class AdminEnrollmentTests(TestCase):
@@ -235,7 +236,7 @@ class AdminEnrollmentTests(TestCase):
             User.objects.create_superuser(
                 username='admin',
                 email='admin@gamil.com',
-                password='<123456>'
+                password='123456'
             )
         # student user
         self.student = User.objects.create_user(
@@ -301,4 +302,65 @@ class AdminEnrollmentTests(TestCase):
 
 
 # Admin Email Tests
-#class AdminEmailTests(TestCase)
+class AdminEmailTests(TestCase):
+    def setUp(self):
+        """Setup: Create an admin user and login"""
+        from django.contrib.auth.models import User
+
+        # Create admin account
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@example.com',
+                password='123456'
+            )
+
+        # Create test email
+        self.test_email = adminEmail.objects.create(
+            email='student@example.com',
+            subject='Test Subject',
+            message='Test Message',
+        )
+
+        self.client = Client()
+        self.client.login(username='admin', password='123456')
+
+
+    def test_email_from_display(self):
+        """Test email from display correct"""
+        response = self.client.get('/admin/email/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'admin/email.html')
+        self.assertContains(response, 'Write New Email')
+        self.assertContains(response, 'Old Mail')
+
+    def test_email_sending(self):
+        """Test email sending"""
+        initial_count = adminEmail.objects.count()
+
+        email_data = {
+            'email' : 'newstudent@example.com',
+            'subject' : 'new test Subject',
+            'message' : 'new test Message',
+        }
+
+        response = self.client.post('/admin/email/', email_data, follow=True)
+
+        # verify email was saved to database
+        self.assertEqual(adminEmail.objects.count(), initial_count + 1)
+        self.assertTrue(adminEmail.objects.filter(email='newstudent@example.com').exists())
+
+        # verify response page
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'admin/email.html')
+        self.assertContains(response, 'new test Subject')
+
+
+    def test_email_history_display(self):
+        """Test email history display"""
+        response = self.client.get('/admin/email/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'student@example.com')
+        self.assertContains(response, 'Test Subject')
+
+
