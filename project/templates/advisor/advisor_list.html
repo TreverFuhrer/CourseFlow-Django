@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Advisor – Students</title></head>
+<body>
+  <h1>Select a Student</h1>
+  <ul>
+    {% for student in students %}
+      <li>
+        <a href="{% url 'view_conversation' student.id %}">
+          {{ student.username }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
