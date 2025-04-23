@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-</head>
+<head><meta charset="UTF-8"><title>Login</title></head>
 <body>
-    <h1>Welcome to the Enrollment Management System</h1>
-    <h2>Login Page</h2>
-    <form action="#" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Enter username"><br><br>
+  <h1>Welcome to the Enrollment Management System</h1>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter password"><br><br>
+  {% if form.errors %}
+    <p style="color:red;">Invalid credentials.</p>
+  {% endif %}
 
-        <button type="submit" disabled>Sign In</button>
-    </form>
-    <br>
-    <a href="/admin/">Sign in as Admin</a>
-    <a href="/advisor/">Sign in as Advisor</a>
+  <form action="{% url 'login' %}?next={{ request.path }}" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <label>Username:</label> {{ form.username }}<br><br>
+    <label>Password:</label> {{ form.password }}<br><br>
+    <button type="submit">Sign In</button>
+  </form>
 </body>
 </html>

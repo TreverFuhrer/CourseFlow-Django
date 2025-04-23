@@ -25,6 +25,10 @@ SECRET_KEY = 'django-insecure-_sgtb_vb+&tasz7&j2h@@=kyz2#e_5b8vady#3y-k2t&$k__l_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
 ALLOWED_HOSTS = []
 
 
