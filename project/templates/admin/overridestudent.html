@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accept/Deny Student Request</title>
+</head>
+<body>
+    <h1>Review Override Request</h1>
+        <p>Student: {{ override.student }}</p>
+        <p>Course: {{ override.course }}</p>
+        <p>Reason: {{ override.reason }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="action" value="approve">Accept</button>
+            <button type="submit" name="action" value="reject">Deny</button>
+        </form>
+    <a href="{% url 'admin-home' %}">Cancel</a>
+
+
+</body>
+</html>

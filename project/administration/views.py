@@ -97,11 +97,24 @@ def course_delete(request, pk):
     return render(request, 'admin/coursedelete.html', {'course': course})
 
 
-#TODO implement this
 @login_required
 def override_action(request, pk):
     if not request.user.is_staff:
         return redirect('home')
+
+    override = OverrideRequest.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            override.status = 'approved'
+        elif action == 'reject':
+            override.status = 'rejected'
+        override.save()
+        return redirect('admin-home')
+
+    return render(request, 'admin/overridestudent.html', {'override': override})
+
 
 #TODO  implemnt this
 @login_required
