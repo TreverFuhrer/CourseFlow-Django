@@ -66,11 +66,22 @@ def course_create(request):
         form = CourseForm()
     return render(request, 'admin/courseform.html', {'form': form, 'action': 'Add'})
 
-#TODO implement this
 @login_required
 def course_update(request, pk):
     if not request.user.is_staff:
         return redirect('home')
+
+    course = Course.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('admin-home')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'admin/courseform.html', {'form': form, 'action': 'Edit'})
+
 
 #TODO implement this
 @login_required
