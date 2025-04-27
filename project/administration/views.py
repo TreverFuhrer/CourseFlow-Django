@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from .adminEmails import EmailMessage
 from django.contrib.auth.forms import AuthenticationForm
+from django import forms
 
 User = get_user_model()
 
@@ -45,11 +46,25 @@ def admin_home(request):
         'students':  students,
     })
 
-#TODO implement this
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'description', 'seat_limit', 'prerequisites', 'instructor']
+
+
 @login_required
 def course_create(request):
     if not request.user.is_staff:
         return redirect('home')
+
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin-home')
+    else:
+        form = CourseForm()
+    return render(request, 'admin/courseform.html', {'form': form, 'action': 'Add'})
 
 #TODO implement this
 @login_required
