@@ -41,18 +41,16 @@ urlpatterns = [
     # student dashboard
     #TODO implement this
     path('student-home/', login_required(student_dashboard), name='student-dashboard'),
+
     # Course Stuff for admin
-    #TODO implement this
     path('admin-home/courses/add/',     course_create, name='admin-course-add'),
     path('admin-home/courses/<int:pk>/edit/',   course_update, name='admin-course-edit'),
     path('admin-home/courses/<int:pk>/delete/', course_delete, name='admin-course-delete'),
 
     # override approvals for admin
-    #TODO implement this
     path('admin-home/overrides/<int:pk>/action/', override_action, name='admin-override-action'),
 
     # student management for admin
-    #TODO implement this
     path('admin-home/students/<int:pk>/', student_detail, name='admin-student-detail'),
 
     # admin report and email

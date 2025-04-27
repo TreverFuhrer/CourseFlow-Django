@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Account</title>
+</head>
+<body>
+    <h1>Student: {{ student.get_full_name }}</h1>
+
+        <h2>Enrollments</h2>
+            <ul>
+            {% for enrollment in enrollments %}
+                <li>{{ enrollment.course.title }} ({{ enrollment.status }})</li>
+            {% empty %}
+                <li>No enrollments.</li>
+            {% endfor %}
+            </ul>
+    <a href="{% url 'admin-home' %}">Back to Admin Home</a>
+
+</body>
+</html>

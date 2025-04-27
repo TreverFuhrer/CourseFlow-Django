@@ -116,11 +116,19 @@ def override_action(request, pk):
     return render(request, 'admin/overridestudent.html', {'override': override})
 
 
-#TODO  implemnt this
 @login_required
 def student_detail(request, pk):
     if not request.user.is_staff:
         return redirect('home')
+
+    student = User.objects.get(pk=pk)
+    enrollments = student.enrollments.all()
+
+    return render(request, 'admin/studentinfo.html', {
+        'student': student,
+        'enrollments': enrollments
+    })
+
 
 @login_required
 def report(request):
