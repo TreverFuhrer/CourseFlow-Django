@@ -83,11 +83,19 @@ def course_update(request, pk):
     return render(request, 'admin/courseform.html', {'form': form, 'action': 'Edit'})
 
 
-#TODO implement this
 @login_required
 def course_delete(request, pk):
     if not request.user.is_staff:
         return redirect('home')
+
+    course = Course.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        course.delete()
+        return redirect('admin-home')
+
+    return render(request, 'admin/coursedelete.html', {'course': course})
+
 
 #TODO implement this
 @login_required
