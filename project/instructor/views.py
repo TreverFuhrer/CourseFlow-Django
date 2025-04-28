@@ -52,3 +52,15 @@ def reject_override_request(request, request_id):
     override_request.save()
     messages.success(request, 'Override request rejected.')
     return redirect('instructor:manage_override_requests')
+
+@login_required
+def update_course_details(request, course_id):
+    course = get_object_or_404(Course, id=course_id, instructor=request.user)
+    if request.method == 'POST':
+        course.title = request.POST.get('title')
+        course.description = request.POST.get('description')
+        course.seat_limit = request.POST.get('seat_limit')
+        course.save()
+        messages.success(request, 'Course details updated.')
+        return redirect('instructor:instructor_dashboard')
+    return render(request, 'instructor/update_course.html', {'course': course})

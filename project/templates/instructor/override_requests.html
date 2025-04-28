@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Override Requests</title>
 </head>
 <body>
+
+<h1>Override Requests</h1>
+
+{% for request in override_requests %}
+  <div>
+    Student: {{ request.student.username }}<br>
+    Course: {{ request.course.title }}<br>
+    Reason: {{ request.reason }}<br>
+    Status: {{ request.status }}
+    <a href="{% url 'instructor-approve-override' request.id %}">Approve</a> |
+    <a href="{% url 'instructor-reject-override' request.id %}">Reject</a>
+  </div>
+{% empty %}
+  <p>No override requests available.</p>
+{% endfor %}
 
 </body>
 </html>

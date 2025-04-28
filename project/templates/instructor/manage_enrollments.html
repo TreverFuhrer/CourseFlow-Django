@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Manage Enrollments</title>
 </head>
 <body>
+
+<h1>Manage Enrollments for {{ course.title }}</h1>
+
+{% for enrollment in enrollments %}
+  <div>
+    Student: {{ enrollment.student.username }} - Status: {{ enrollment.status }}
+    <a href="{% url 'instructor-approve-enrollment' enrollment.id %}">Approve</a> |
+    <a href="{% url 'instructor-reject-enrollment' enrollment.id %}">Reject</a>
+  </div>
+{% empty %}
+  <p>No enrollments yet.</p>
+{% endfor %}
 
 </body>
 </html>

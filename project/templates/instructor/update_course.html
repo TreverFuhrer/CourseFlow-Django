@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>Update Course Details</title>
 </head>
 <body>
+
+<h1>Update Course Details</h1>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>Title:</label><br>
+  <input type="text" name="title" value="{{ course.title }}"><br><br>
+
+  <label>Description:</label><br>
+  <textarea name="description">{{ course.description }}</textarea><br><br>
+
+  <label>Seat Limit:</label><br>
+  <input type="number" name="seat_limit" value="{{ course.seat_limit }}"><br><br>
+
+  <button type="submit">Update Course</button>
+</form>
 
 </body>
 </html>
