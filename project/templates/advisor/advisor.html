@@ -7,11 +7,25 @@
 <body>
     <h1>Advisor HomePage</h1>
 
-
-  <h2>Options</h2>
+  <h2>Quick Options</h2>
   <ul>
     <li><a href="{% url 'advisor_list' %}">Message a Student</a></li>
   </ul>
+
+<h2>Students</h2>
+  <table>
+    <tr><th>Username</th><th>Name</th><th>Email</th><th>Enrollments</th></tr>
+    {% for s in students %}
+      <tr>
+        <td><a href="{% url 'advisor-student-detail' s.pk %}">{{ s.username }}</a></td>
+        <td>{{ s.get_full_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.enrollments.count }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No students found.</td></tr>
+    {% endfor %}
+  </table>
 
 </body>
 </html>

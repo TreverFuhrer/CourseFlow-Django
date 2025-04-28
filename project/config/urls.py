@@ -24,6 +24,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
 from administration.views import student_dashboard
+from advisor.views import advisor_detail
 # If this doesn't work right click project folder
 # Mark directory as source
 # File, invalidate caches, restart pycharm
@@ -62,8 +63,13 @@ urlpatterns = [
     # backend admin
     path('admin/', admin.site.urls),
 
-    # advisor/chat
+    # advisor homepage
     path('advisor_home/', login_required(advisor_home), name='advisor_home'),
+
+    #advisor student info
+    path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),
+
+    #advisor chat
     path('advisor_list/', advisor_list, name='advisor_list'),
     path('conversation/<int:recipient_id>/', view_conversation, name='view_conversation'),
     path('send/<int:recipient_id>/', send_message, name='send_message'),

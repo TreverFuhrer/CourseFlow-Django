@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Message
+from administration.models import Course, Enrollment
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -12,7 +13,13 @@ def advisor_home(request):
     if not request.user.groups.filter(name='Advisor').exists():
         return redirect('home')
 
-    return render(request, 'advisor/advisor.html', )
+    courses = Course.objects.all()
+    students = User.objects.filter(is_staff=False)
+
+    return render(request, 'advisor/advisor.html', {
+        'courses':   courses,
+        'students':  students,
+    })
 
 @login_required
 def send_message(request, recipient_id):
@@ -39,3 +46,16 @@ def view_conversation(request, recipient_id):
 def advisor_list(request):
     students = User.objects.all().order_by('username')
     return render(request, 'advisor/advisor_list.html', {'students': students})
+
+@login_required
+def advisor_detail(request, pk):
+    if not request.user.groups.filter(name='Advisor').exists():
+        return redirect('home')
+
+    student = User.objects.get(pk=pk)
+    enrollments = student.enrollments.all()
+
+    return render(request, 'advisor/studentinfo.html', {
+        'student': student,
+        'enrollments': enrollments
+    })
