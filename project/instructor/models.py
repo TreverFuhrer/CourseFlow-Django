@@ -1,5 +1,5 @@
 from django.db import models
-from project.administration.models import Course
+from administration.models import Course
 from django.contrib.auth.models import User
 
 class InstructorProfile(models.Model):

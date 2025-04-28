@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from project.administration.models import Course, Enrollment, OverrideRequest
+from administration.models import Course, Enrollment, OverrideRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import InstructorProfile
@@ -32,3 +32,23 @@ def reject_enrollment(request, enrollment_id):
     messages.success(request, 'Enrollment rejected.')
     return redirect('instructor:manage_enrollments', course_id=enrollment.course.id)
 
+@login_required
+def manage_override_requests(request):
+    override_requests = OverrideRequest.objects.filter(course__instructor=request.user)
+    return render(request, 'instructor/override_requests.html', {'override_requests': override_requests})
+
+@login_required
+def approve_override_request(request, request_id):
+    override_request = get_object_or_404(OverrideRequest, id=request_id, course__instructor=request.user)
+    override_request.status = 'approved'
+    override_request.save()
+    messages.success(request, 'Override request approved.')
+    return redirect('instructor:manage_override_requests')
+
+@login_required
+def reject_override_request(request, request_id):
+    override_request = get_object_or_404(OverrideRequest, id=request_id, course__instructor=request.user)
+    override_request.status = 'rejected'
+    override_request.save()
+    messages.success(request, 'Override request rejected.')
+    return redirect('instructor:manage_override_requests')
