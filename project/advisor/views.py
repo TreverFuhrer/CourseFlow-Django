@@ -8,6 +8,13 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 @login_required
+def advisor_home(request):
+    if not request.user.groups.filter(name='Advisor').exists():
+        return redirect('home')
+
+    return render(request, 'advisor/advisor.html', )
+
+@login_required
 def send_message(request, recipient_id):
     if request.method == 'POST':
         recipient = User.objects.get(pk=recipient_id)

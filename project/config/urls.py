@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import path
+
+import advisor
 from administration.views import home, report, email, admin_home
-from advisor.views import send_message, view_conversation, advisor_list
+from advisor.views import advisor_home, send_message, view_conversation, advisor_list
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
@@ -67,6 +70,4 @@ urlpatterns = [
     path('advisor/', advisor_list, name='advisor_list'),
     path('conversation/<int:recipient_id>/', view_conversation, name='view_conversation'),
     path('send/<int:recipient_id>/', send_message, name='send_message'),
-
-    path('student/', include('student.urls')),
 ]
