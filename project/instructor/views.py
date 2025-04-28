@@ -15,3 +15,20 @@ def manage_enrollments(request, course_id):
     course = get_object_or_404(Course, id=course_id, instructor=request.user)
     enrollments = course.enrollments.all()
     return render(request, 'instructor/manage_enrollments.html', {'course': course, 'enrollments': enrollments})
+
+@login_required
+def approve_enrollment(request, enrollment_id):
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, course__instructor=request.user)
+    enrollment.status = 'approved'
+    enrollment.save()
+    messages.success(request, 'Enrollment approved.')
+    return redirect('instructor:manage_enrollments', course_id=enrollment.course.id)
+
+@login_required
+def reject_enrollment(request, enrollment_id):
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, course__instructor=request.user)
+    enrollment.status = 'rejected'
+    enrollment.save()
+    messages.success(request, 'Enrollment rejected.')
+    return redirect('instructor:manage_enrollments', course_id=enrollment.course.id)
+
