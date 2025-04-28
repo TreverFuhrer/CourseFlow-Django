@@ -70,8 +70,7 @@ urlpatterns = [
 
     # Instructor dashboard and actions
     path('instructor/dashboard/', login_required(instructor_dashboard), name='instructor-dashboard'),
-    path('instructor/manage_enrollments/<int:course_id>/', login_required(manage_enrollments),
-         name='instructor-manage-enrollments'),
+    path('instructor/manage_enrollments/<int:course_id>/', manage_enrollments, name='instructor-manage-enrollments'),
     path('instructor/approve_enrollment/<int:enrollment_id>/', login_required(approve_enrollment),
          name='instructor-approve-enrollment'),
     path('instructor/reject_enrollment/<int:enrollment_id>/', login_required(reject_enrollment),

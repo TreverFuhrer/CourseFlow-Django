@@ -16,34 +16,58 @@ class InstructorModelTest(TestCase):
 
 class InstructorViewTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='instructor2', password='pass1234')
-        self.course = Course.objects.create(title='Another Course', description='Another Description', seat_limit=25, instructor=self.user)
-        self.client.login(username='instructor2', password='pass1234')
+        self.user = User.objects.create_user(username='testinstructor', password='testpassword')
+        self.course = Course.objects.create(
+            title='361',
+            description='Software Engineering',
+            seat_limit=30,
+            instructor=self.user
+        )
+        self.student = User.objects.create_user(username='teststudent', password='testpassword')
+        self.enrollment = Enrollment.objects.create(course=self.course, student=self.student, status='pending')
+        self.override_request = OverrideRequest.objects.create(course=self.course, student=self.student, status='pending')
+        self.client.login(username='testinstructor', password='testpassword')
 
     def test_instructor_dashboard_view(self):
-        response = self.client.get('/instructor/dashboard/')  # Adjust URL if needed
+        response = self.client.get('/instructor/dashboard/')
         self.assertEqual(response.status_code, 200)
 
     def test_manage_enrollments_view(self):
-        response = self.client.get(f'/instructor/manage_enrollments/{self.course.id}/')  # Adjust URL if needed
+        response = self.client.get(f'/instructor/manage_enrollments/{self.course.id}/')
         self.assertEqual(response.status_code, 200)
 
-    # TODO: Test approving enrollment
-    # def test_approve_enrollment(self):
-    #     pass
+    def test_approve_enrollment(self):
+        response = self.client.post(f'/instructor/approve_enrollment/{self.enrollment.id}/')
+        self.enrollment.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.enrollment.status, 'approved')
 
-    # TODO: Test rejecting enrollment
-    # def test_reject_enrollment(self):
-    #     pass
+    def test_reject_enrollment(self):
+        response = self.client.post(f'/instructor/reject_enrollment/{self.enrollment.id}/')
+        self.enrollment.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.enrollment.status, 'rejected')
 
-    # TODO: Test override request approval
-    # def test_approve_override_request(self):
-    #     pass
+    def test_approve_override_request(self):
+        response = self.client.post(f'/instructor/approve_override/{self.override_request.id}/')
+        self.override_request.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.override_request.status, 'approved')
 
-    # TODO: Test override request rejection
-    # def test_reject_override_request(self):
-    #     pass
+    def test_reject_override_request(self):
+        response = self.client.post(f'/instructor/reject_override/{self.override_request.id}/')
+        self.override_request.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.override_request.status, 'rejected')
 
-    # TODO: Test updating course details
-    # def test_update_course_details(self):
-    #     pass
+    def test_update_course_details(self):
+        response = self.client.post(f'/instructor/update_course/{self.course.id}/', {
+            'title': '371',
+            'description': 'New course description!!',
+            'seat_limit': 50,
+        })
+        self.course.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.course.title, '371')
+        self.assertEqual(self.course.description, 'New course description!!')
+        self.assertEqual(self.course.seat_limit, 50)
