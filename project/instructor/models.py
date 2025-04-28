@@ -1,5 +1,3 @@
-# instructor/models.py
-
 from django.db import models
 from project.administration.models import Course
 from django.contrib.auth.models import User

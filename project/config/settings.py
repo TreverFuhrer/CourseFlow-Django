@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'administration.apps.AdministrationConfig',
     'advisor.apps.AdvisorConfig',
+    'instructor',
 ]
 
 MIDDLEWARE = [
