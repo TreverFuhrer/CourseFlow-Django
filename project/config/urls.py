@@ -25,6 +25,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
 from administration.views import student_dashboard
+from advisor.views import advisor_detail
 # If this doesn't work right click project folder
 # Mark directory as source
 # File, invalidate caches, restart pycharm
