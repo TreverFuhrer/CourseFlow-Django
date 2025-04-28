@@ -7,18 +7,11 @@
 <body>
     <h1>Advisor HomePage</h1>
 
-    <form method=”post” action="{% url 'send_message' recipient.id %}">
-        {% csrf_token %}
-        <textarea name=”content”></textarea>
-        <input type=”submit” value=”Send”>
-    </form>
 
-    <h1>Conversation with {{ recipient.username }}</h1>
-    <ul>
-        {% for message in messages %}
-        <li>{{ message.sender.username }}: {{ message.content }}</li>
-        {% endfor %}
-    </ul>
+  <h2>Options</h2>
+  <ul>
+    <li><a href="{% url 'advisor_list' %}">Message a Student</a></li>
+  </ul>
 
 </body>
 </html>
