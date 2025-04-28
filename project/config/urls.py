@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from administration.views import home, report, email, admin_home
 from advisor.views import send_message, view_conversation, advisor_list
 from django.contrib.auth import views as auth_views
@@ -25,6 +25,9 @@ from administration.views import student_dashboard
 # If this doesn't work right click project folder
 # Mark directory as source
 # File, invalidate caches, restart pycharm
+
+
+
 
 app_name = 'chat'
 
@@ -64,4 +67,6 @@ urlpatterns = [
     path('advisor/', advisor_list, name='advisor_list'),
     path('conversation/<int:recipient_id>/', view_conversation, name='view_conversation'),
     path('send/<int:recipient_id>/', send_message, name='send_message'),
+
+    path('student/', include('student.urls')),
 ]
