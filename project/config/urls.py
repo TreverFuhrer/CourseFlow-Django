@@ -67,8 +67,14 @@ urlpatterns = [
     # backend admin
     path('admin/', admin.site.urls),
 
-    # advisor/chat
-    path('advisor/', advisor_list, name='advisor_list'),
+    # advisor homepage
+    path('advisor_home/', login_required(advisor_home), name='advisor_home'),
+
+    # advisor student info
+    path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),
+
+    # advisor chat
+    path('advisor_list/', advisor_list, name='advisor_list'),
     path('conversation/<int:recipient_id>/', view_conversation, name='view_conversation'),
     path('send/<int:recipient_id>/', send_message, name='send_message'),
 ]
