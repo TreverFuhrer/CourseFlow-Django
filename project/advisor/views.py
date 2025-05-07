@@ -55,7 +55,32 @@ def advisor_detail(request, pk):
     student = User.objects.get(pk=pk)
     enrollments = student.enrollments.all()
 
+    taken_courses = set(e.course for e in enrollments if e.status == 'approved')
+    all_courses = set(Course.objects.all())
+    available_courses = all_courses - taken_courses
+    recommended_courses = []
+    for c in available_courses:
+        prereqs = set(c.prerequisites.all())
+        if prereqs <= taken_courses:
+            recommended_courses.append(c)
+
     return render(request, 'advisor/studentinfo.html', {
         'student': student,
-        'enrollments': enrollments
+        'enrollments': enrollments,
+        'recommended_courses': recommended_courses,
     })
+
+@login_required
+def enrollment_action(request, enr_id):
+    if not request.user.groups.filter(name='Advisor').exists():
+        return redirect('home')
+
+    enr = User.objects.get(pk=enr_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            enr.status = 'approved'
+        elif action == 'reject':
+            enr.status = 'rejected'
+        enr.save()
+    return redirect('advisor-student-detail', pk=enr.student.pk)
