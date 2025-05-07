@@ -27,7 +27,7 @@ def send_message(request, recipient_id):
         recipient = User.objects.get(pk=recipient_id)
         content = request.POST['content']
         message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-        return redirect('chat:conversation', recipient_id=recipient_id)
+        return redirect('view_conversation', recipient_id=recipient_id)
         return render(request, 'advisor/advisor.html')
 
 @login_required
