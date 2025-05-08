@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.shortcuts import render, redirect
@@ -14,7 +14,7 @@ def advisor_home(request):
         return redirect('home')
 
     courses = Course.objects.all()
-    students = User.objects.filter(is_staff=False)
+    students = User.objects.filter(groups__name='Student').order_by('username')
 
     return render(request, 'advisor/advisor.html', {
         'courses':   courses,
@@ -44,7 +44,7 @@ def view_conversation(request, recipient_id):
 
 @login_required
 def advisor_list(request):
-    students = User.objects.all().order_by('username')
+    students = User.objects.filter(groups__name='Student').order_by('username')
     return render(request, 'advisor/advisor_list.html', {'students': students})
 
 @login_required
@@ -52,7 +52,7 @@ def advisor_detail(request, pk):
     if not request.user.groups.filter(name='Advisor').exists():
         return redirect('home')
 
-    student = User.objects.get(pk=pk)
+    student = get_object_or_404(User, pk=pk, groups__name='Student')
     enrollments = student.enrollments.all()
 
     taken_courses = set(e.course for e in enrollments if e.status == 'approved')
