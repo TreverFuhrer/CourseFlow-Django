@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.shortcuts import render, redirect
@@ -14,7 +14,7 @@ def advisor_home(request):
         return redirect('home')
 
     courses = Course.objects.all()
-    students = User.objects.filter(is_staff=False)
+    students = User.objects.filter(groups__name='Student').order_by('username')
 
     return render(request, 'advisor/advisor.html', {
         'courses':   courses,
@@ -27,7 +27,7 @@ def send_message(request, recipient_id):
         recipient = User.objects.get(pk=recipient_id)
         content = request.POST['content']
         message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-        return redirect('chat:conversation', recipient_id=recipient_id)
+        return redirect('view_conversation', recipient_id=recipient_id)
         return render(request, 'advisor/advisor.html')
 
 @login_required
@@ -44,7 +44,7 @@ def view_conversation(request, recipient_id):
 
 @login_required
 def advisor_list(request):
-    students = User.objects.all().order_by('username')
+    students = User.objects.filter(groups__name='Student').order_by('username')
     return render(request, 'advisor/advisor_list.html', {'students': students})
 
 @login_required
@@ -52,10 +52,35 @@ def advisor_detail(request, pk):
     if not request.user.groups.filter(name='Advisor').exists():
         return redirect('home')
 
-    student = User.objects.get(pk=pk)
+    student = get_object_or_404(User, pk=pk, groups__name='Student')
     enrollments = student.enrollments.all()
+
+    taken_courses = set(e.course for e in enrollments if e.status == 'approved')
+    all_courses = set(Course.objects.all())
+    available_courses = all_courses - taken_courses
+    recommended_courses = []
+    for c in available_courses:
+        prereqs = set(c.prerequisites.all())
+        if prereqs <= taken_courses:
+            recommended_courses.append(c)
 
     return render(request, 'advisor/studentinfo.html', {
         'student': student,
-        'enrollments': enrollments
+        'enrollments': enrollments,
+        'recommended_courses': recommended_courses,
     })
+
+@login_required
+def enrollment_action(request, enr_id):
+    if not request.user.groups.filter(name='Advisor').exists():
+        return redirect('home')
+
+    enr = User.objects.get(pk=enr_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            enr.status = 'approved'
+        elif action == 'reject':
+            enr.status = 'rejected'
+        enr.save()
+    return redirect('advisor-student-detail', pk=enr.student.pk)
