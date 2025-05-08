@@ -9,6 +9,7 @@ __pycache__/
 
 # Django migrations
 # migrations/
+project/db.sqlite3
 
 # PyCharm project files
 .idea/
