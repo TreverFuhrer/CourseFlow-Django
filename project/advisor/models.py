@@ -1,5 +1,11 @@
 from django.db import models
 
+'''
+Login info:
+username: Advisor
+password: compsci361
+'''
+
 # Create your models here.
 from django.contrib.auth.models import User
 

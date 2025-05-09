@@ -7,18 +7,30 @@
 <body>
     <h1>Advisor HomePage</h1>
 
-    <form method=”post” action="{% url 'send_message' recipient.id %}">
-        {% csrf_token %}
-        <textarea name=”content”></textarea>
-        <input type=”submit” value=”Send”>
-    </form>
+  <h2>Quick Options</h2>
+  <ul>
+    <li><a href="{% url 'advisor_list' %}">Message a Student</a></li>
+  </ul>
 
-    <h1>Conversation with {{ recipient.username }}</h1>
-    <ul>
-        {% for message in messages %}
-        <li>{{ message.sender.username }}: {{ message.content }}</li>
-        {% endfor %}
-    </ul>
+<h2>Students</h2>
+  <table>
+    <tr><th>Username</th><th>Name</th><th>Email</th><th>Enrollments</th></tr>
+    {% for s in students %}
+      <tr>
+        <td><a href="{% url 'advisor-student-detail' s.pk %}">{{ s.username }}</a></td>
+        <td>{{ s.get_full_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.enrollments.count }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No students found.</td></tr>
+    {% endfor %}
+  </table>
+
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
 
 </body>
 </html>

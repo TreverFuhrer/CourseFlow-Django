@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student: {{ student.username }}</title>
+</head>
+<body>
+    <h1>Student: {{ student.get_full_name }}</h1>
+
+    <h2>Enrollments</h2>
+    <ul>
+        {% for e in enrollments %}
+        <li>
+            {{ e.course.title }} — {{ e.status }}
+            {% if e.status == 'pending' %}
+                <form method="post" action="{% url 'advisor-enrollment-action' e.id %}" style="display:inline">
+                    {% csrf_token %}
+                    <button name="action" value="approve">Approve</button>
+                    <button name="action" value="reject">Reject</button>
+                </form>
+             {% endif %}
+      </li>
+    {% empty %}
+      <li>No enrollments.</li>
+    {% endfor %}
+  </ul>
+
+    <h2>Recommended Courses</h2>
+    <ul>
+        {% for c in recommendations %}
+            <li>{{ c.title }} (Seats: {{ c.seat_limit }})</li>
+        {% empty %}
+            <li>No recommendations at this time.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'advisor_home' %}">Back to Advisor Home</a></p>
+
+</body>
+</html>
