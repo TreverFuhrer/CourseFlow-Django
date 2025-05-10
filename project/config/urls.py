@@ -85,19 +85,6 @@ urlpatterns = [
     path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),
     path('advisor-home/enrollment/<int:enr_id>/action/',enrollment_action,name='advisor-enrollment-action'),
 
-    # Instructor dashboard and actions
-    path('instructor/dashboard/', login_required(instructor_dashboard), name='instructor-dashboard'),
-    path('instructor/manage_enrollments/<int:course_id>/', manage_enrollments, name='instructor-manage-enrollments'),
-    path('instructor/approve_enrollment/<int:enrollment_id>/', login_required(approve_enrollment),
-         name='instructor-approve-enrollment'),
-    path('instructor/reject_enrollment/<int:enrollment_id>/', login_required(reject_enrollment),
-         name='instructor-reject-enrollment'),
-    path('instructor/override_requests/', login_required(manage_override_requests),
-         name='instructor-override-requests'),
-    path('instructor/approve_override/<int:request_id>/', login_required(approve_override_request),
-         name='instructor-approve-override'),
-    path('instructor/reject_override/<int:request_id>/', login_required(reject_override_request),
-         name='instructor-reject-override'),
-    path('instructor/update_course/<int:course_id>/', login_required(update_course_details),
-         name='instructor-update-course'),
+    # Instructor
+    path('instructor/', include('instructor.urls', namespace='instructor')),
 ]
