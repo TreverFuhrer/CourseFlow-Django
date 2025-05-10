@@ -22,7 +22,7 @@ def home(request):
             return redirect('advisor_home')
         # Instructor login
         if request.user.groups.filter(name='Instructor').exists():
-            return redirect('instructor-dashboard')
+            return redirect('instructor:instructor-dashboard')
         # Student Signin
         return redirect('student-dashboard')
 

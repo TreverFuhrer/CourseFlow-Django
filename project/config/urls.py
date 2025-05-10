@@ -26,8 +26,6 @@ from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
 from administration.views import student_dashboard
 
-from instructor.views import instructor_dashboard, manage_enrollments, approve_enrollment, reject_enrollment, manage_override_requests, approve_override_request, reject_override_request, update_course_details
-
 from advisor.views import advisor_detail, enrollment_action
 # If this doesn't work right click project folder
 # Mark directory as source

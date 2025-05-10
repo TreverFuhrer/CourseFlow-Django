@@ -6,7 +6,9 @@ class Course(models.Model):
     description = models.TextField()
     seat_limit = models.PositiveIntegerField()
     prerequisites = models.ManyToManyField('self', blank=True, symmetrical=False)
-    instructor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL,
+    instructor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
         null=True,
         related_name='courses',
     )
