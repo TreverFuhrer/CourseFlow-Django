@@ -11,8 +11,8 @@
 {% for enrollment in enrollments %}
   <div>
     Student: {{ enrollment.student.username }} - Status: {{ enrollment.status }}
-    <a href="{% url 'instructor-approve-enrollment' enrollment.id %}">Approve</a> |
-    <a href="{% url 'instructor-reject-enrollment' enrollment.id %}">Reject</a>
+    <a href="{% url 'instructor:instructor-approve-enrollment' enrollment.id %}">Approve</a> |
+    <a href="{% url 'instructor:instructor-reject-enrollment' enrollment.id %}">Reject</a>
   </div>
 {% empty %}
   <p>No enrollments yet.</p>

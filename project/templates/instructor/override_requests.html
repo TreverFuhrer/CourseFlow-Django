@@ -14,8 +14,8 @@
     Course: {{ request.course.title }}<br>
     Reason: {{ request.reason }}<br>
     Status: {{ request.status }}
-    <a href="{% url 'instructor-approve-override' request.id %}">Approve</a> |
-    <a href="{% url 'instructor-reject-override' request.id %}">Reject</a>
+    <a href="{% url 'instructor:instructor-approve-override' request.id %}">Approve</a> |
+    <a href="{% url 'instructor:instructor-reject-override' request.id %}">Reject</a>
   </div>
 {% empty %}
   <p>No override requests available.</p>

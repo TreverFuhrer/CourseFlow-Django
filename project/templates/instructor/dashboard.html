@@ -22,8 +22,10 @@
         <td>{{ course.title }}</td>
         <td>{{ course.seat_limit }}</td>
         <td>{{ course.instructor }}</td>
-        <td><a href="{% url 'instructor-manage-enrollments' course.id %}">Manage Enrollments</a>
-            <a href="{% url 'instructor-update-course' course.id %}">Update Course</a></td>
+        <td>
+            <a href="{% url 'instructor:instructor-manage-enrollments' course.id %}">Manage Enrollments</a>
+            <a href="{% url 'instructor:instructor-update-course' course.id %}">Update Course</a>
+        </td>
       </tr>
     {% empty %}
       <tr><td colspan="4">No courses defined.</td></tr>
