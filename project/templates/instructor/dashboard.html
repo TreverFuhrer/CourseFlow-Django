@@ -3,17 +3,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Instructor Dashboard</title>
+  <title>My Courses</title>
   <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
 </head>
 <body>
   <nav class="navbar">
-    <ul class="nav-list">
-      <li class="nav-item"><a href="{% url 'instructor:instructor-dashboard' %}" class="nav-link">Dashboard</a></li>
-      <li class="nav-item"><a href="{% url 'instructor:instructor-override-requests' %}" class="nav-link">Overrides</a></li>
-    </ul>
-    <div class="user-actions">
+    <div class="nav-left">
       <span class="username">{{ request.user.username }}</span>
+    </div>
+    <div class="nav-right">
       <form action="{% url 'logout' %}" method="post" class="logout-form">
         {% csrf_token %}
         <button type="submit" class="btn logout-btn">Log out</button>
@@ -23,14 +21,11 @@
 
   <main class="container">
     <h1 class="page-title">My Courses</h1>
+    <a href="{% url 'instructor:instructor-override-requests' %}" class="btn btn-default">View Override Requests</a>
 
     <table class="table courses-table">
       <thead>
-        <tr>
-          <th>Title</th>
-          <th>Seats</th>
-          <th>Actions</th>
-        </tr>
+        <tr><th>Title</th><th>Seats</th><th>Actions</th></tr>
       </thead>
       <tbody>
         {% for course in courses %}
