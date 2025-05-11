@@ -4,7 +4,15 @@ from django.contrib import admin
 
 ### Test instructor login
 # Username:
-# Trever
+# instructor
 
 # Password
-# Instructor
+# wsxedcrfv
+
+
+### Test instructor 2 login
+# Username:
+# instructor2
+
+# Password
+# wsxedcrfv
