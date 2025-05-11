@@ -1,36 +1,52 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Instructor Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
 </head>
 <body>
-
-<h1>Instructor Dashboard</h1>
-<p>
-    Welcome, {{ request.user.username }}!
-    <form action="{% url 'logout' %}" method="post">
+  <nav class="navbar">
+    <ul class="nav-list">
+      <li class="nav-item"><a href="{% url 'instructor:instructor-dashboard' %}" class="nav-link">Dashboard</a></li>
+      <li class="nav-item"><a href="{% url 'instructor:instructor-override-requests' %}" class="nav-link">Overrides</a></li>
+    </ul>
+    <div class="user-actions">
+      <span class="username">{{ request.user.username }}</span>
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
         {% csrf_token %}
-        <button type="submit">Log out</button>
-    </form>
-</p>
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    </div>
+  </nav>
 
-<table>
-    <tr><th>Title</th><th>Seats</th><th>Instructor</th><th>Actions</th></tr>
-    {% for course in courses %}
-      <tr>
-        <td>{{ course.title }}</td>
-        <td>{{ course.seat_limit }}</td>
-        <td>{{ course.instructor }}</td>
-        <td>
-            <a href="{% url 'instructor:instructor-manage-enrollments' course.id %}">Manage Enrollments</a>
-            <a href="{% url 'instructor:instructor-update-course' course.id %}">Update Course</a>
-        </td>
-      </tr>
-    {% empty %}
-      <tr><td colspan="4">No courses defined.</td></tr>
-    {% endfor %}
-  </table>
+  <main class="container">
+    <h1 class="page-title">My Courses</h1>
 
+    <table class="table courses-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Seats</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+          <tr>
+            <td>{{ course.title }}</td>
+            <td>{{ course.seat_limit }}</td>
+            <td>
+              <a href="{% url 'instructor:instructor-manage-enrollments' course.id %}" class="btn btn-primary">Manage Enrollments</a>
+              <a href="{% url 'instructor:instructor-update-course' course.id %}" class="btn btn-secondary">Edit Course</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3" class="empty">No courses available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
 </body>
 </html>
