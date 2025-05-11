@@ -1,27 +1,40 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Update Course Details</title>
+  <title>Edit Course</title>
+  <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
 </head>
 <body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="username">{{ request.user.username }}</span>
+    </div>
+    <div class="nav-right">
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    </div>
+  </nav>
 
-<h1>Update Course Details</h1>
+  <main class="container form-container">
+    <a href="{% url 'instructor:instructor-dashboard' %}" class="btn back-btn">← Back to Courses</a>
+    <h1 class="page-title">Edit {{ course.title }}</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label>Title:</label><br>
+      <input type="text" name="title" value="{{ course.title }}" class="form-input"><br><br>
 
-<form method="post">
-  {% csrf_token %}
+      <label>Description:</label><br>
+      <textarea name="description" class="form-textarea">{{ course.description }}</textarea><br><br>
 
-  <label>Title:</label><br>
-  <input type="text" name="title" value="{{ course.title }}"><br><br>
+      <label>Seat Limit:</label><br>
+      <input type="number" name="seat_limit" value="{{ course.seat_limit }}" class="form-input"><br><br>
 
-  <label>Description:</label><br>
-  <textarea name="description">{{ course.description }}</textarea><br><br>
-
-  <label>Seat Limit:</label><br>
-  <input type="number" name="seat_limit" value="{{ course.seat_limit }}"><br><br>
-
-  <button type="submit">Update Course</button>
-</form>
-
+      <button type="submit" class="btn btn-primary">Update Course</button>
+    </form>
+  </main>
 </body>
 </html>

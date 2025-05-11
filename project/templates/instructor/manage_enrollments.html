@@ -8,12 +8,10 @@
 </head>
 <body>
   <nav class="navbar">
-    <ul class="nav-list">
-      <li class="nav-item"><a href="{% url 'instructor:instructor-dashboard' %}" class="nav-link">Dashboard</a></li>
-      <li class="nav-item"><a href="{% url 'instructor:instructor-override-requests' %}" class="nav-link">Overrides</a></li>
-    </ul>
-    <div class="user-actions">
+    <div class="nav-left">
       <span class="username">{{ request.user.username }}</span>
+    </div>
+    <div class="nav-right">
       <form action="{% url 'logout' %}" method="post" class="logout-form">
         {% csrf_token %}
         <button type="submit" class="btn logout-btn">Log out</button>
@@ -22,8 +20,8 @@
   </nav>
 
   <main class="container">
-    <a href="{% url 'instructor:instructor-dashboard' %}" class="btn back-btn">← Back to Dashboard</a>
-    <h1 class="page-title">Enrollments for {{ course.title }}</h1>
+    <a href="{% url 'instructor:instructor-dashboard' %}" class="btn back-btn">← Back to Courses</a>
+    <h1 class="page-title">Enrollments: {{ course.title }}</h1>
 
     <div class="enrollments-list">
       {% for enrollment in enrollments %}
