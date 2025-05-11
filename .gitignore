@@ -20,3 +20,7 @@ Thumbs.db
 
 # Local Specific Database
 db.sqlite3
+
+# IntelliJ
+*.iml
+.idea/

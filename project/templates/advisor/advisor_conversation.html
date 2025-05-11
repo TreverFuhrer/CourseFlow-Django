@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head><title>Conversation with {{ recipient.username }}</title></head>
+<head>
+    <title>Conversation with {{ recipient.username }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 <body>
   <h1>Conversation with {{ recipient.username }}</h1>
 

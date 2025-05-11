@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Courses</title>
+</head>
+<body>
+    <h1>All Courses</h1>
+
+    {% if courses %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Instructor</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.title }}</td>
+                <td>{{ course.instructor }}</td>
+                <td>{{ course.seat_limit }}</td>
+                <td>
+                    <a href="{% url 'student-course-detail' course.id %}">View Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No courses found.</p>
+    {% endif %}
+
+    <p><a href="{% url 'student-dashboard' %}">Return to Dashboard</a></p>
+</body>
+</html>

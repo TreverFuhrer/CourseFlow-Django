@@ -157,7 +157,7 @@ class AdminCourseManagementTests(TestCase):
 
         # test course
         self.course = Course.objects.create(
-            title='Test Course',
+            title='TEST101',
             description='This is a test course',
             seat_limit=30,
             instructor=self.instructor
@@ -184,7 +184,7 @@ class AdminCourseManagementTests(TestCase):
 
         # verify course was crated
         self.assertEqual(Course.objects.count(), initial_count + 1)
-        self.assertTrue(Course.objects.filter(title='Test Course').exists())
+        self.assertTrue(Course.objects.filter(title='TEST101').exists())
 
     def test_course_edit(self):
         """Test course edit through admin interface"""
@@ -256,7 +256,7 @@ class AdminEnrollmentTests(TestCase):
 
         # test courses
         self.course = Course.objects.create(
-            title='Test Course',
+            title='TEST101',
             description='This is a test course',
             seat_limit=30,
             instructor=self.instructor

@@ -32,7 +32,7 @@ def home(request):
 @login_required
 def student_dashboard(request):
     #TODO implemnt this
-    return render(request, 'student_home.html')
+    return render(request, 'student/student_dashboard.html')
 
 @login_required
 def admin_home(request):
@@ -43,7 +43,7 @@ def admin_home(request):
     overrides = OverrideRequest.objects.filter(status='pending')
     students  = User.objects.filter(is_staff=False)
 
-    return render(request, 'admin_home.html', {
+    return render(request, 'student_home.html', {
         'courses':   courses,
         'overrides': overrides,
         'students':  students,
