@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.urls import path
+
 
 import advisor
 from administration.views import home, report, email, admin_home
@@ -46,8 +46,7 @@ urlpatterns = [
     path('admin-home/', login_required(admin_home), name='admin-home'),
 
     # student dashboard
-    #TODO implement this
-    path('student-home/', login_required(student_dashboard), name='student-dashboard'),
+    path('student/', include('student.urls')),
 
     # Course Stuff for admin
     path('admin-home/courses/add/',     course_create, name='admin-course-add'),

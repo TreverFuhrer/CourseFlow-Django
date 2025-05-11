@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.title }} Details</title>
+</head>
+<body>
+    <h1>{{ course.title }}</h1>
+
+    <p><strong>Instructor:</strong> {{ course.instructor }}</p>
+    <p><strong>Description:</strong> {{ course.description }}</p>
+    <p><strong>Seat Limit:</strong> {{ course.seat_limit }}</p>
+    <p><strong>Enrolled:</strong> {{ course.current_enrollment }}</p>
+    <p><strong>Prerequisites:</strong> {{ course.prerequisites }}</p>
+
+    {%  if eligible_to_enroll %}
+        <form method="post" action="{% url 'student-enroll-course' course.id %}">
+            {% csrf_token %}
+            <button type="submit">Enroll</button>
+        </form>
+    {% elif missing_prereq %}
+        <form method="post" action="{% url 'student-request-override' course.id %}">
+            {% csrf_token %}
+            <p><label for="reason">Reason for override:</label></p>
+            <textarea name="reason" id="reason" required></textarea><br>
+            <button type="submit">Request Override</button>
+        </form>
+    {% endif %}
+
+    {% if course.is_full %}
+        <form method="post" action="{% url 'student-join-waitlist' course.id %}">
+            {% csrf_token %}
+            <button type="submit">Join Waitlist</button>
+        </form>
+    {% endif %}
+
+    <p><a href="{% url 'student-dashboard' %}">Return to Dashboard</a></p>
+</body>
+</html>

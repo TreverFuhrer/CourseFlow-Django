@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+</head>
+<body>
+  <h1>Student Dashboard</h1>
+  <p>
+    Welcome, {{ request.user.username }}!
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
+  </p>
+
+  //Class Search Section
+  <h2>Search for Classes</h2>
+  <form method="get" action="{% url 'student-class-search' %}">
+      <label for="title">Course Title:</label>
+      <input type="text" name="title" id="title">
+
+      <label for="instructor">Instructor:</label>
+      <input type="text" name="instructor" id="instructor">
+
+      <button type="submit">Search</button>
+  </form>
+
+  <p><a href="{% url 'student-view-all-courses' %}">View All Courses</a></p>
+
+  //Enrolled Courses
+  <h2>My Enrollments</h2>
+  {% if enrollments %}
+        <table>
+            <tr>
+                <th>Course</th>
+                <th>Instructor</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td>{{ enrollment.course.title }}</td>
+                <td>{{ enrollment.course.instructor }}</td>
+                <td>{{ enrollment.status }}</td>
+                <td>
+                    <form action="{% url 'student-drop-course' enrollment.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Drop</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+  {% else %}
+    <p>You are not enrolled in any classes.</p>
+  {% endif %}
+
+
+  //Override/Waitlist Status
+  <h2>Override and Waitlist Requests</h2>
+  {% if requests %}
+    <table>
+        <tr>
+            <th>Course</th>
+            <th>Type</th>
+            <th>Status</th>
+        </tr>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.course.title }}</td>
+            <td>{{ req.request_type }}</td>
+            <td>{{ req.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+  {% else %}
+    <p>No pending override or waitlist requests.</p>
+  {% endif %}
+</body>
+</html>
+
+

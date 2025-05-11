@@ -8,9 +8,18 @@
     <h1>Welcome, {{ user.username }}!</h1>
     <p>This is your student dashboard.</p>
 
+    <h2>Your Enrolled Courses:</h2>
     <ul>
-        <li><a href="{%  url 'student enroll' %}">Enroll in a Course</a></li>
-        <li><a href="{% url 'student-override-request' %}">Request an Override</a></li>
+        {% for enrollment in enrollments %}
+            <li>{{ enrollment.course.title }}</li>
+        {% empty %}
+            <li>You are not enrolled in any courses yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Actions:</h2>
+    <ul>
+        <li><a href="{%  url 'student-view-all-courses' %}">View Available Courses</a></li>
     </ul>
 </body>
 </html>
