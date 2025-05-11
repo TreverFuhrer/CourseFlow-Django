@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+    {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <h1>Administrator Dashboard</h1>
+  <p>
+    Welcome, {{ request.user.username }}!
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
+  </p>
+
+  <h2>Courses</h2>
+  <a href="{% url 'admin-course-add' %}">+ Add New Course</a>
+  <table>
+    <tr><th>Title</th><th>Seats</th><th>Instructor</th><th>Actions</th></tr>
+    {% for c in courses %}
+      <tr>
+        <td>{{ c.title }}</td>
+        <td>{{ c.seat_limit }}</td>
+        <td>{{ c.instructor }}</td>
+        <td>
+          <a href="{% url 'admin-course-edit' c.pk %}">Edit</a> |
+          <a href="{% url 'admin-course-delete' c.pk %}">Delete</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No courses defined.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Pending Overrides</h2>
+  <table>
+    <tr><th>Student</th><th>Course</th><th>Reason</th><th>Action</th></tr>
+    {% for o in overrides %}
+      <tr>
+        <td>{{ o.student }}</td>
+        <td>{{ o.course }}</td>
+        <td>{{ o.reason }}</td>
+        <td><a href="{% url 'admin-override-action' o.pk %}">Review</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No pending overrides.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Students</h2>
+  <table>
+    <tr><th>Username</th><th>Name</th><th>Email</th><th>Enrollments</th></tr>
+    {% for s in students %}
+      <tr>
+        <td><a href="{% url 'admin-student-detail' s.pk %}">{{ s.username }}</a></td>
+        <td>{{ s.get_full_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.enrollments.count }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No students found.</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Other</h2>
+  <ul>
+    <li><a href="{% url 'report' %}">View Enrollment Reports</a></li>
+    <li><a href="{% url 'admin-email' %}">Send Email</a></li>
+  </ul>
+</body>
+</html>

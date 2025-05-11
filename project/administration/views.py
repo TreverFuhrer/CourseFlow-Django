@@ -29,7 +29,7 @@ def home(request):
 @login_required
 def student_dashboard(request):
     #TODO implemnt this
-    return render(request, 'student_home.html')
+    return render(request, 'student/student_dashboard.html')
 
 @login_required
 def admin_home(request):

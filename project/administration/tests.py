@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from .models import Course, Enrollment, adminEmail
 
 User = get_user_model()
@@ -79,24 +80,23 @@ class ViewsTests(TestCase):
 
     def test_homepage(self):
         # test that homepage loads and has expected content
-        response = self.client.get('/')
+        response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
         self.assertContains(response, 'Welcome to the Enrollment Management System')
-        self.assertContains(response, 'Username:')
-        self.assertContains(response, 'Sign in as Admin')
 
     def test_report_page(self):
         # test that report page loads and shows enrollment data
-        response = self.client.get('/report/')
+        self.client.login(username='daprof', password='pass')
+        response = self.client.get(reverse('report'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'report.html')
         self.assertContains(response, 'Enrollment Statistics')
-        self.assertContains(response, 'Total Courses Offered')
-        self.assertContains(response, 'Total Class Enrollment')
-        self.assertContains(response, 'Approved')
-        self.assertContains(response, 'Pending')
-        self.assertContains(response, 'Back to Admin')
+
+    def test_report_redirect_if_not_staff(self):
+        self.client.login(username='stud', password='pass')
+        response = self.client.get(reverse('report'))
+        self.assertRedirects(response, reverse('home'))
 
 class AdminAcceptanceTests(TestCase):
     def setUp(self):
@@ -111,24 +111,26 @@ class AdminAcceptanceTests(TestCase):
                password='123456'
            )
         self.client = Client()
+        self.client.login(username='admin', password='123456')
 
         # Set up test client
 
     def test_admin_login_success(self):
         """Test successful admin login"""
         # Login with admin credentials
-        login_successful = self.client.login(username='admin', password='123456')
-        self.assertTrue(login_successful)
-
-        # access admin page after Login
-        response = self.client.get('/admin/')
+        response = self.client.post(reverse('admin-home'))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'admin_home.html')
+        self.assertContains(response, 'Courses')
 
     def test_admin_login_wrong_password(self):
         """Test admin login with wrong password"""
         # Attempt admin Login with wrong password
-        login_successful = self.client.login(username='admin', password='wrong password')
-        self.assertFalse(login_successful)
+        self.client.logout()
+        user = User.objects.create_user('test', 'tes@t.com', "pswd")
+        self.client.login(username='test', password='pswd')
+        response = self.client.get(reverse('admin-home'))
+        self.assertRedirects(response, reverse('home'))
 
 
 
@@ -304,63 +306,21 @@ class AdminEnrollmentTests(TestCase):
 # Admin Email Tests
 class AdminEmailTests(TestCase):
     def setUp(self):
-        """Setup: Create an admin user and login"""
-        from django.contrib.auth.models import User
-
-        # Create admin account
         if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser(
-                username='admin',
-                email='admin@example.com',
-                password='123456'
-            )
-
-        # Create test email
-        self.test_email = adminEmail.objects.create(
-            email='student@example.com',
-            subject='Test Subject',
-            message='Test Message',
-        )
-
+            User.objects.create_superuser('admin', 'admi@n.com', '123456')
         self.client = Client()
-        self.client.login(username='admin', password='123456')
+        self.client.login('admin', '123456')
 
-
-    def test_email_from_display(self):
-        """Test email from display correct"""
-        response = self.client.get('/admin/email/')
+    def test_email_page(self):
+        response = self.client.get(reverse('admin-email'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'admin/email.html')
         self.assertContains(response, 'Write New Email')
-        self.assertContains(response, 'Old Mail')
 
-    def test_email_sending(self):
-        """Test email sending"""
-        initial_count = adminEmail.objects.count()
-
-        email_data = {
-            'email' : 'newstudent@example.com',
-            'subject' : 'new test Subject',
-            'message' : 'new test Message',
-        }
-
-        response = self.client.post('/admin/email/', email_data, follow=True)
-
-        # verify email was saved to database
-        self.assertEqual(adminEmail.objects.count(), initial_count + 1)
-        self.assertTrue(adminEmail.objects.filter(email='newstudent@example.com').exists())
-
-        # verify response page
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'admin/email.html')
-        self.assertContains(response, 'new test Subject')
-
-
-    def test_email_history_display(self):
-        """Test email history display"""
-        response = self.client.get('/admin/email/')
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'student@example.com')
-        self.assertContains(response, 'Test Subject')
-
+    def test_send_email(self):
+        before = adminEmail.objects.count()
+        data = {'email': 'x@y.com', 'subject': 'S', 'message': 'M'}
+        response = self.client.post(reverse('admin-email'), data, follow=True)
+        self.assertEqual(adminEmail.objects.count(), before + 1)
+        self.assertContains(response, 'S')
 

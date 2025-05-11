@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Advisor HomePage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <h1>Advisor HomePage</h1>
@@ -26,6 +28,11 @@
       <tr><td colspan="4">No students found.</td></tr>
     {% endfor %}
   </table>
+
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
 
 </body>
 </html>
