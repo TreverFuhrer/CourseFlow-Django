@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
-from administration.models import Course, Enrollment, OverrideRequest
+from administration.models import Course, Enrollment
 from django.urls import reverse
 
 

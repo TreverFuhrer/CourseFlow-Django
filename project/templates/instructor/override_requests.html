@@ -13,7 +13,7 @@
     Student: {{ request.student.username }}<br>
     Course: {{ request.course.title }}<br>
     Reason: {{ request.reason }}<br>
-    Status: {{ request.status }}
+    Status: {{ request.status }}<br>
     <a href="{% url 'instructor:instructor-approve-override' request.id %}">Approve</a> |
     <a href="{% url 'instructor:instructor-reject-override' request.id %}">Reject</a>
   </div>
