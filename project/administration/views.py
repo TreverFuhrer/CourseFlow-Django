@@ -15,7 +15,7 @@ User = get_user_model()
 def home(request):
     if request.user.is_authenticated:
         # Admin Signin
-        if request.user.groups.filter(name='Admin').exists():
+        if request.user.is_staff:
             return redirect('admin-home')
         # Advisor signin
         if request.user.groups.filter(name='Advisor').exists():
@@ -40,7 +40,7 @@ def admin_home(request):
     overrides = OverrideRequest.objects.filter(status='pending')
     students  = User.objects.filter(is_staff=False)
 
-    return render(request, 'student_home.html', {
+    return render(request, 'admin_home.html', {
         'courses':   courses,
         'overrides': overrides,
         'students':  students,
