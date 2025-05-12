@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Conversation with {{ recipient.username }}</title>
+</head>
+<body>
+  <h1>Conversation with {{ recipient.username }}</h1>
+  <ul>
+    {% for msg in messages %}
+      <li>
+        <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+        <em>at {{ msg.timestamp|date:"SHORT_DATETIME_FORMAT" }}</em>
+      </li>
+    {% endfor %}
+  </ul>
+  <form method="post" action="{% url 'send_message' recipient.id %}">
+    {% csrf_token %}
+    <textarea name="content" rows="3" cols="40" placeholder="Type your message…"></textarea><br>
+    <button type="submit">Send</button>
+  </form>
+  <p>
+    {% if request.user.groups.all.0.name == 'Advisor' %}
+      <a href="{% url 'advisor_list' %}">Back to Students</a>
+    {% else %}
+      <a href="{% url 'advisor-home' %}">Back to Advisors</a> |
+      <a href="{% url 'student-dashboard' %}">Back to Dashboard</a>
+    {% endif %}
+  </p>
+</body>
+</html>

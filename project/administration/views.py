@@ -15,7 +15,7 @@ User = get_user_model()
 def home(request):
     if request.user.is_authenticated:
         # Admin Signin
-        if request.user.is_staff:
+        if request.user.groups.filter(name='Admin').exists():
             return redirect('admin-home')
         # Advisor signin
         if request.user.groups.filter(name='Advisor').exists():

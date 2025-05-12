@@ -32,10 +32,6 @@ from student.views import student_dashboard,student_course_search,student_all_co
 # File, invalidate caches, restart pycharm
 
 
-
-
-app_name = 'chat'
-
 urlpatterns = [
     path('', home, name='home'),
 
@@ -82,8 +78,9 @@ urlpatterns = [
 
     # advisor chat
     path('advisor_list/', advisor_list, name='advisor_list'),
-    path('conversation/<int:recipient_id>/', view_conversation, name='view_conversation'),
-    path('send/<int:recipient_id>/', send_message, name='send_message'),
+    path('conversation/<int:recipient_id>/', login_required(view_conversation), name='view_conversation'),path('send/<int:recipient_id>/', login_required(send_message), name='send_message'),
+    path('chat/conversation/<int:recipient_id>/', login_required(view_conversation), name='view_conversation'),
+    path('chat/send/<int:recipient_id>/', login_required(send_message), name='send_message'),
 
     #Advisor Admin functions
     path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),

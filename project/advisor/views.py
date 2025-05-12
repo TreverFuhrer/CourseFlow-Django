@@ -25,10 +25,8 @@ def advisor_home(request):
 def send_message(request, recipient_id):
     if request.method == 'POST':
         recipient = User.objects.get(pk=recipient_id)
-        content = request.POST['content']
-        message = Message.objects.create(sender=request.user, recipient=recipient, content=content)
-        return redirect('view_conversation', recipient_id=recipient_id)
-        return render(request, 'advisor/advisor.html')
+        Message.objects.create(sender=request.user, recipient=recipient, content=request.POST['content'])
+    return redirect('view_conversation', recipient_id=recipient_id)
 
 @login_required
 def view_conversation(request, recipient_id):
@@ -37,7 +35,7 @@ def view_conversation(request, recipient_id):
         Q(sender=request.user,   recipient=recipient) |
         Q(sender=recipient,      recipient=request.user)
     ).order_by('timestamp')
-    return render(request, 'advisor/advisor_conversation.html', {
+    return render(request, 'chat/conversation.html', {
         'recipient': recipient,
         'messages': messages,
     })
@@ -75,12 +73,12 @@ def enrollment_action(request, enr_id):
     if not request.user.groups.filter(name='Advisor').exists():
         return redirect('home')
 
-    enr = User.objects.get(pk=enr_id)
+    enroll = get_object_or_404(Enrollment, pk=enr_id)
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'approve':
-            enr.status = 'approved'
+            enroll.status = 'approved'
         elif action == 'reject':
-            enr.status = 'rejected'
-        enr.save()
-    return redirect('advisor-student-detail', pk=enr.student.pk)
+            enroll.status = 'rejected'
+        enroll.save()
+    return redirect('advisor-student-detail', pk=enroll.student.pk)

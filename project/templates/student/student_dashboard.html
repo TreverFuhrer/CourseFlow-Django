@@ -31,5 +31,18 @@
       {% csrf_token %}
       <button type="submit">Log out</button>
     </form>
+
+    <h2>Message Your Advisor</h2>
+        <ul>
+        {% for adv in advisors %}
+            <li>
+                <a href="{% url 'view_conversation' adv.id %}">
+                {{ adv.get_full_name }} ({{ adv.username }})
+                </a>
+             </li>
+            {% empty %}
+            <li>No advisors found.</li>
+        {% endfor %}
+        </ul>
 </body>
 </html>

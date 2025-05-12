@@ -2,12 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from administration.models import Course, Enrollment, OverrideRequest
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 @login_required
 def student_dashboard(request):
     student = request.user
     enrollments = Enrollment.objects.filter(student=student)
-    return render(request, 'student/student_dashboard.html', {'enrollments': enrollments})
+    advisors = User.objects.filter(groups__name='Advisor').order_by('username')
+    return render(request, 'student/student_dashboard.html', {'enrollments': enrollments, 'advisors': advisors})
 
 @login_required
 def student_enroll_course(request, course_id):
