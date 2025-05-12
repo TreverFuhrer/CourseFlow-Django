@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <h1>Welcome, {{ user.username }}!</h1>
@@ -27,10 +29,6 @@
         <li><a href="{%  url 'student-view-all-courses' %}">View Available Courses</a></li>
         <li><a href="{% url 'student-class-search' %}?q=">Search Courses</a></li>
     </ul>
-    <form action="{% url 'logout' %}" method="post">
-      {% csrf_token %}
-      <button type="submit">Log out</button>
-    </form>
 
     <h2>Message Your Advisor</h2>
         <ul>
@@ -44,5 +42,10 @@
             <li>No advisors found.</li>
         {% endfor %}
         </ul>
+
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
 </body>
 </html>

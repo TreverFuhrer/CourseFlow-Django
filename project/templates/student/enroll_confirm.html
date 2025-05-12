@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Enroll in {{ course.title }}</title>
+    {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <h1>Enroll in {{ course.title }}</h1>

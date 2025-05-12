@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
   <title>{{ course.title }} ({{ course.code }})</title>
+    {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   <h1>{{ course.title }} ({{ course.code }})</h1>
