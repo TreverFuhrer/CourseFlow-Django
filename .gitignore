@@ -17,3 +17,10 @@ project/db.sqlite3
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Local Specific Database
+db.sqlite3
+
+# IntelliJ
+*.iml
+.idea/

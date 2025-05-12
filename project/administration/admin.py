@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from .models import Course, Enrollment
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from .models import OverrideRequest
 
 User = get_user_model()
 
@@ -29,6 +30,12 @@ class StudentAdmin(UserAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(is_staff=False)
+
+@admin.register(OverrideRequest)
+class OverrideRequestAdmin(admin.ModelAdmin):
+    list_display = ('student', 'course', 'status', 'request_date')
+    list_filter = ('status', 'course')
+    search_fields = ('student__username', 'course__title', 'reason')
 
 admin.site.unregister(User)
 admin.site.register(User, StudentAdmin)

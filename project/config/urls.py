@@ -25,6 +25,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
 from administration.views import student_dashboard
+
 from advisor.views import advisor_detail, enrollment_action
 from student.views import student_dashboard,student_course_search,student_all_courses,student_course_detail,student_enroll_course,drop_course,student_request_override,join_waitlist
 # If this doesn't work right click project folder
@@ -85,5 +86,7 @@ urlpatterns = [
     #Advisor Admin functions
     path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),
     path('advisor-home/enrollment/<int:enr_id>/action/',enrollment_action,name='advisor-enrollment-action'),
-]
 
+    # Instructor
+    path('instructor/', include('instructor.urls', namespace='instructor')),
+]

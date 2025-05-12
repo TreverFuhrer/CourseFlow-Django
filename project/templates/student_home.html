@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Student Dashboard</title>
+    {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   <h1>Student Dashboard</h1>
@@ -14,7 +16,7 @@
     </form>
   </p>
 
-  //Class Search Section
+  <!-- Class Search Section -->
   <h2>Search for Classes</h2>
   <form method="get" action="{% url 'student-class-search' %}">
       <label for="title">Course Title:</label>
@@ -28,7 +30,7 @@
 
   <p><a href="{% url 'student-view-all-courses' %}">View All Courses</a></p>
 
-  //Enrolled Courses
+  <!-- Enrolled Courses -->
   <h2>My Enrollments</h2>
   {% if enrollments %}
         <table>
@@ -57,7 +59,7 @@
   {% endif %}
 
 
-  //Override/Waitlist Status
+  <!-- Override/Waitlist Status -->
   <h2>Override and Waitlist Requests</h2>
   {% if requests %}
     <table>

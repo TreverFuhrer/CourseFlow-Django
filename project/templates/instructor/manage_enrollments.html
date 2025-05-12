@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Enrollments</title>
+    <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="username">{{ request.user.username }}</span>
+    </div>
+    <div class="nav-right">
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="{% url 'instructor:instructor-dashboard' %}" class="btn back-btn">← Back to Courses</a>
+    <h1 class="page-title">Enrollments: {{ course.title }}</h1>
+
+    <div class="enrollments-list">
+      {% for enrollment in enrollments %}
+        <div class="enrollment-item">
+          <span class="student-name">{{ enrollment.student.username }}</span>
+          <span class="status status-{{ enrollment.status }}">{{ enrollment.get_status_display }}</span>
+          <div class="actions">
+            <a href="{% url 'instructor:instructor-approve-enrollment' enrollment.id %}" class="btn btn-approve">Approve</a>
+            <a href="{% url 'instructor:instructor-reject-enrollment' enrollment.id %}" class="btn btn-reject">Reject</a>
+            <a href="{% url 'instructor:instructor-email-student' enrollment.id %}" class="btn btn-email">Email</a>
+          </div>
+        </div>
+      {% empty %}
+        <p class="empty">No enrollments yet.</p>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>

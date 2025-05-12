@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Override Requests</title>
+    <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="username">{{ request.user.username }}</span>
+    </div>
+    <div class="nav-right">
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="{% url 'instructor:instructor-dashboard' %}" class="btn back-btn">← Back to Courses</a>
+    <h1 class="page-title">Pending Override Requests</h1>
+
+    <div class="override-list">
+      {% for req in override_requests %}
+        <div class="override-item">
+          <span class="student-name">{{ req.student.username }}</span> —
+          <span class="course-name">{{ req.course.title }}</span>
+          <p class="reason">Reason: {{ req.reason }}</p>
+          <div class="actions">
+            <a href="{% url 'instructor:instructor-approve-override' req.id %}" class="btn btn-approve">Approve</a>
+            <a href="{% url 'instructor:instructor-reject-override' req.id %}" class="btn btn-reject">Reject</a>
+          </div>
+        </div>
+      {% empty %}
+        <p class="empty">No pending requests.</p>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>

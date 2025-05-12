@@ -20,6 +20,9 @@ def home(request):
         # Advisor signin
         if request.user.groups.filter(name='Advisor').exists():
             return redirect('advisor-home')
+        # Instructor login
+        if request.user.groups.filter(name='Instructor').exists():
+            return redirect('instructor:instructor-dashboard')
         # Student Signin
         return redirect('student-dashboard')
 

@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Student</title>
+    <link rel="stylesheet" href="{% static 'css/instructor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="user-actions">
+      <span class="username">{{ request.user.username }}</span>
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn logout-btn">Log out</button>
+      </form>
+    </div>
+  </nav>
+
+  <main class="container form-container">
+    <a href="{% url 'instructor:instructor-manage-enrollments' enrollment.course.id %}" class="btn back-btn">← Back to Enrollments</a>
+    <h1 class="page-title">Email {{ student.username }}</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label>Subject:</label><br>
+      <input type="text" name="subject" class="form-input" required><br><br>
+
+      <label>Message:</label><br>
+      <textarea name="message" rows="6" class="form-textarea" required></textarea><br><br>
+
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </main>
+</body>
+</html>
