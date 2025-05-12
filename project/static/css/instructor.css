@@ -1,0 +1,197 @@
+/* Instructor-specific styles */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.username {
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.logout-form button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-form button:hover {
+    background-color: #c0392b;
+    text-decoration: none;
+}
+
+/* Main container */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Page title */
+.page-title {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-default {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.back-btn {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+/* Courses table */
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.courses-table th,
+.courses-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.courses-table th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.courses-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Enrollment items */
+.enrollments-list .enrollment-item {
+    background: #fafafa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.enrollment-item .actions a {
+    margin-left: 10px;
+}
+
+/* Override items */
+.override-list .override-item {
+    background: #fafafa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.override-item .actions a {
+    margin-right: 10px;
+}
+
+/* Forms */
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-container button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #2980b9;
+}
+
+/* Status labels */
+.status-pending {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.status-approved {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #e74c3c;
+    font-weight: bold;
+}

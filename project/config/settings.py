@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'administration.apps.AdministrationConfig',
     'advisor.apps.AdvisorConfig',
     'instructor.apps.InstructorConfig',
+    'student',
 ]
 
 MIDDLEWARE = [

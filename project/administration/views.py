@@ -43,7 +43,7 @@ def admin_home(request):
     overrides = OverrideRequest.objects.filter(status='pending')
     students  = User.objects.filter(is_staff=False)
 
-    return render(request, 'student_home.html', {
+    return render(request, 'admin_home.html', {
         'courses':   courses,
         'overrides': overrides,
         'students':  students,
