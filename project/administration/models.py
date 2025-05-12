@@ -12,6 +12,14 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def is_full(self):
+        return self.enrollments.count() >= self.seat_limit
+
+    def missing_prerequisites(self, student):
+        taken = {enrolled.course for enrolled in student.enrollments.all()}
+        return self.prerequisites.exclude(pk__in=[c.pk for c in taken])
+
 class Enrollment(models.Model):
     STATUS_OPTIONS = (
         ('pending', 'Pending'),

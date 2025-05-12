@@ -3,25 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Dashboard</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <h1>Welcome, {{ user.username }}!</h1>
-    <p>This is your student dashboard.</p>
 
     <h2>Your Enrolled Courses:</h2>
     <ul>
-        {% for enrollment in enrollments %}
-            <li>{{ enrollment.course.title }}</li>
-        {% empty %}
-            <li>You are not enrolled in any courses yet.</li>
-        {% endfor %}
+      {% for enrollment in enrollments %}
+        <li>
+          {{ enrollment.course.title }}
+          <form method="post" action="{% url 'student-drop-course' enrollment.id %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit">Drop</button>
+          </form>
+        </li>
+      {% empty %}
+        <li>No courses yet.</li>
+      {% endfor %}
     </ul>
 
     <h2>Actions:</h2>
     <ul>
         <li><a href="{%  url 'student-view-all-courses' %}">View Available Courses</a></li>
+        <li><a href="{% url 'student-class-search' %}?q=">Search Courses</a></li>
     </ul>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
 </body>
 </html>

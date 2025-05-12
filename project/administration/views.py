@@ -19,7 +19,7 @@ def home(request):
             return redirect('admin-home')
         # Advisor signin
         if request.user.groups.filter(name='Advisor').exists():
-            return redirect('advisor_home')
+            return redirect('advisor-home')
         # Student Signin
         return redirect('student-dashboard')
 

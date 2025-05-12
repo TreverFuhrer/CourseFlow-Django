@@ -26,6 +26,7 @@ from django.contrib.auth.decorators import login_required
 from administration.views import course_create, course_update, course_delete,override_action, student_detail
 from administration.views import student_dashboard
 from advisor.views import advisor_detail, enrollment_action
+from student.views import student_dashboard,student_course_search,student_all_courses,student_course_detail,student_enroll_course,drop_course,student_request_override,join_waitlist
 # If this doesn't work right click project folder
 # Mark directory as source
 # File, invalidate caches, restart pycharm
@@ -46,7 +47,14 @@ urlpatterns = [
     path('admin-home/', login_required(admin_home), name='admin-home'),
 
     # student dashboard
-    path('student/', include('student.urls')),
+    path('student-home/',                 login_required(student_dashboard),             name='student-dashboard'),
+    path('search-classes/',               login_required(student_course_search),         name='student-class-search'),
+    path('all-courses/',                  login_required(student_all_courses),           name='student-view-all-courses'),
+    path('class/<int:course_id>/',        login_required(student_course_detail),         name='student-course-detail'),
+    path('enroll/<int:course_id>/',       login_required(student_enroll_course),         name='student-enroll-course'),
+    path('drop/<int:enrollment_id>/',     login_required(drop_course),                  name='student-drop-course'),
+    path('request-override/<int:course_id>/', login_required(student_request_override),    name='student-request-override'),
+    path('waitlist/<int:course_id>/',     login_required(join_waitlist),                name='waitlist_course'),
 
     # Course Stuff for admin
     path('admin-home/courses/add/',     course_create, name='admin-course-add'),
@@ -67,7 +75,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # advisor homepage
-    path('advisor_home/', login_required(advisor_home), name='advisor_home'),
+    path('advisor-home/', login_required(advisor_home), name='advisor-home'),
 
     # advisor student info
     path('advisor-home/students/<int:pk>/', advisor_detail, name='advisor-student-detail'),
