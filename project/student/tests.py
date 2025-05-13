@@ -9,7 +9,12 @@ class StudentViewTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.student = User.objects.create_user(username='teststudent', password='password123')
-        self.course = Course.objects.create(title='TEST101', seat_limit=30)
+        self.course = Course.objects.create(
+            title = 'TEST101',
+            code = 'TEST101',
+            description = 'Test course',
+            seat_limit = 30,
+            instructor = None)
 
 
     def test_student_dashboard_requires_login(self):
@@ -74,7 +79,8 @@ class StudentViewTests(TestCase):
     def test_student_drop_course(self):
         Enrollment.objects.create(course=self.course, student=self.student, status='enrolled')
         self.client.login(username='teststudent', password='password123')
-        response = self.client.post(reverse('student-drop-course', args=[self.course.id]))
+        enrollment = Enrollment.objects.get(course=self.course, student=self.student)
+        response = self.client.post(reverse('student-drop-course', args=[enrollment.id]))
         self.assertRedirects(response, reverse('student-dashboard'))
         self.assertFalse(Enrollment.objects.filter(course=self.course, student=self.student).exists())
 

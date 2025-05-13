@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Conversation with {{ recipient.username }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   <h1>Conversation with {{ recipient.username }}</h1>
@@ -10,7 +12,6 @@
     {% for msg in messages %}
       <li>
         <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
-        <em>at {{ msg.timestamp|date:"SHORT_DATETIME_FORMAT" }}</em>
       </li>
     {% endfor %}
   </ul>

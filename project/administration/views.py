@@ -34,9 +34,9 @@ def student_dashboard(request):
     #TODO implemnt this
     return render(request, 'student/student_dashboard.html')
 
-@login_required
+
 def admin_home(request):
-    if not request.user.is_staff:
+    if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('home')
 
     courses   = Course.objects.all()
@@ -133,18 +133,36 @@ def student_detail(request, pk):
     })
 
 
-@login_required
 def report(request):
-    if not request.user.is_staff:
+    if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('home')
 
     courseCount = Course.objects.count()
     enrollment = Enrollment.objects.count()
     status = Enrollment.objects.values('status').annotate(count=Count('id'))
+
+    popular = Course.objects.annotate(student_count=Count('enrollments')).order_by('-student_count')[:5]
+
+    coursesfill = []
+    for course in Course.objects.all():
+        enrolled = course.enrollments.filter(status='approved').count()
+        fill = (enrolled / course.seat_limit) * 100 if course.seat_limit > 0 else 0
+        coursesfill.append({'course': course, 'enrolled': enrolled, 'seat_limit': course.seat_limit, 'fill': round(fill, 1)})
+
+    coursesfill = sorted(coursesfill, key=lambda x: x['fill'], reverse=True)
+
+    status_by_course = {}
+    for course in Course.objects.all():
+        status_counts = course.enrollments.values('status').annotate(count=Count('id'))
+        status_by_course[course.title] = {item['status']: item['count'] for item in status_counts}
+    
     return render(request, 'report.html', {
         'courseCount': courseCount,
         'enrollment': enrollment,
         'status': status,
+        'popular_courses': popular,
+        'courses_with_fill_rate': coursesfill,
+        'status_by_course': status_by_course,
     })
 
 @login_required

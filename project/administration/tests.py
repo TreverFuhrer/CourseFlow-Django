@@ -14,6 +14,7 @@ class CourseTests(TestCase):
         # creating a course
         self.course = Course.objects.create(
             title='CS361',
+            code='CS361',
             description='Software Engineering',
             seat_limit=30,
             instructor=self.prof
@@ -27,6 +28,7 @@ class CourseTests(TestCase):
         # add a prereq to the course and check it's there
         prereq = Course.objects.create(
             title='CS351',
+            code='CS351',
             description='Data Structures',
             seat_limit=30,
             instructor=self.prof
@@ -38,10 +40,11 @@ class CourseTests(TestCase):
 class EnrollmentTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.prof = User.objects.create(username='daprof', password='testpass')
+        self.prof = User.objects.create(username='daprof', password='testpass', email='d@prof.com')
         self.student = User.objects.create(username='studenttt', password='testpass')
         self.course = Course.objects.create(
             title='CS361',
+            code='CS361',
             description='Software Engineering',
             seat_limit=30,
             instructor=self.prof
@@ -65,7 +68,7 @@ class EnrollmentTests(TestCase):
 class ViewsTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.prof = User.objects.create(username='daprof', password='testpass')
+        self.prof = User.objects.create(username='daprof', password='testpass', email='d@prof.com')
         self.student = User.objects.create(username='studenttt', password='testpass')
         self.course = Course.objects.create(
             title='CS361',
@@ -87,14 +90,22 @@ class ViewsTests(TestCase):
 
     def test_report_page(self):
         # test that report page loads and shows enrollment data
-        self.client.login(username='daprof', password='pass')
+        self.client.logout()
+        staff_user = User.objects.create_user(
+            username='staffuser', 
+            password='staffpass', 
+            email='staff@example.com',
+            is_staff=True
+        )
+        # Log in as staff user
+        self.client.login(username='staffuser', password='staffpass')
         response = self.client.get(reverse('report'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'report.html')
         self.assertContains(response, 'Enrollment Statistics')
 
     def test_report_redirect_if_not_staff(self):
-        self.client.login(username='stud', password='pass')
+        self.client.login(username='studenttt', password='testpass')
         response = self.client.get(reverse('report'))
         self.assertRedirects(response, reverse('home'))
 
@@ -129,8 +140,8 @@ class AdminAcceptanceTests(TestCase):
         self.client.logout()
         user = User.objects.create_user('test', 'tes@t.com', "pswd")
         self.client.login(username='test', password='pswd')
-        response = self.client.get(reverse('admin-home'))
-        self.assertRedirects(response, reverse('home'))
+        response = self.client.get(reverse('admin-home'), follow=True)
+        self.assertRedirects(response, reverse('student-dashboard'))
 
 
 
@@ -158,13 +169,14 @@ class AdminCourseManagementTests(TestCase):
         # test course
         self.course = Course.objects.create(
             title='TEST101',
+            code='TEST101',
             description='This is a test course',
             seat_limit=30,
             instructor=self.instructor
         )
 
         # login as admin
-        self.clinet = Client()
+        self.client = Client()
         self.client.login(username='admin', password='123456')
 
 
@@ -179,24 +191,24 @@ class AdminCourseManagementTests(TestCase):
             'seat_limit': 30,
             'instructor': self.instructor.id
         }
+        
+        response = self.client.post(reverse('admin-course-add'), course_data, follow=True)
 
-        response = self.client.post('/admin/administration/course/add/', course_data, follow=True)
-
-        # verify course was crated
+        # verify course was created
         self.assertEqual(Course.objects.count(), initial_count + 1)
-        self.assertTrue(Course.objects.filter(title='TEST101').exists())
+        self.assertTrue(Course.objects.filter(title='Test Course').exists())
 
     def test_course_edit(self):
         """Test course edit through admin interface"""
 
         updated_data = {
             'title': 'Updated Course Title',
+            'code': self.course.code,
             'description': 'Updated Course Description',
             'seat_limit': 35,
             'instructor': self.instructor.id
         }
-
-        response = self.client.post(f'/admin/administration/course/{self.course.id}/change/', updated_data, follow=True)
+        response = self.client.post(reverse('admin-course-edit', args=[self.course.id]), updated_data, follow=True)
 
         # verify course was updated
         updated_course = Course.objects.get(id=self.course.id)
@@ -309,7 +321,7 @@ class AdminEmailTests(TestCase):
         if not User.objects.filter(username='admin').exists():
             User.objects.create_superuser('admin', 'admi@n.com', '123456')
         self.client = Client()
-        self.client.login('admin', '123456')
+        self.client.login(username='admin', password='123456')
 
     def test_email_page(self):
         response = self.client.get(reverse('admin-email'))

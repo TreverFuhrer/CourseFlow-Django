@@ -3,7 +3,7 @@ from django.conf import settings
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
-    code = models.CharField(max_length=20, unique=True, default='UNKN101')
+    code = models.CharField(max_length=20, default='UNKN101')
     description = models.TextField()
     seat_limit = models.PositiveIntegerField()
     prerequisites = models.ManyToManyField('self', blank=True, symmetrical=False)

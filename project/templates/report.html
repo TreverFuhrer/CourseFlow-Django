@@ -8,8 +8,11 @@
 </head>
 <body>
     <h1>Enrollment Statistics</h1>
+    
+    <h2>Overview</h2>
     <p><strong>Total Courses Offered: </strong>{{ courseCount }}</p>
     <p><strong>Total Class Enrollment: </strong>{{ enrollment }}</p>
+    
     <h2>Enrollment Status</h2>
     <ul>
       {% for i in status %}
@@ -18,6 +21,70 @@
         <li>No enrollment data available.</li>
       {% endfor %}
     </ul>
+    
+    <h2>Most Popular Courses</h2>
+    <table border="1">
+        <tr>
+            <th>Course Title</th>
+            <th>Total Enrollments</th>
+        </tr>
+        {% for course in popular_courses %}
+        <tr>
+            <td>{{ course.title }}</td>
+            <td>{{ course.student_count }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No course data available</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    
+    <h2>Course Fill Rates</h2>
+    <table border="1">
+        <tr>
+            <th>Course</th>
+            <th>Current Enrollment</th>
+            <th>Seat Limit</th>
+            <th>Fill Rate</th>
+        </tr>
+        {% for course_data in courses_with_fill_rate %}
+        <tr>
+            <td>{{ course_data.course.title }}</td>
+            <td>{{ course_data.enrolled }}</td>
+            <td>{{ course_data.seat_limit }}</td>
+            <td>{{ course_data.fill_percentage }}%</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No course fill rate data available</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    
+    <h2>Enrollment Status by Course</h2>
+    <table border="1">
+        <tr>
+            <th>Course</th>
+            <th>Pending</th>
+            <th>Approved</th>
+            <th>Rejected</th>
+        </tr>
+        {% for course_name, statuses in status_by_course.items %}
+        <tr>
+            <td>{{ course_name }}</td>
+            <td>{{ statuses.pending|default:"0" }}</td>
+            <td>{{ statuses.approved|default:"0" }}</td>
+            <td>{{ statuses.rejected|default:"0" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No enrollment status data available</td>
+        </tr>
+        {% endfor %}
+    </table>
 
     <p><a href="/admin-home/">Back to Admin</a> </p>
 </body>

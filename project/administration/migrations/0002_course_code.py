@@ -2,6 +2,11 @@
 
 from django.db import migrations, models
 
+def generate_unique_codes(apps, schema_editor):
+    Course = apps.get_model('administration', 'Course')
+    for course in Course.objects.all():
+        course.code = f"COURSE{course.pk}"
+        course.save(update_fields=['code'])
 
 class Migration(migrations.Migration):
 
@@ -13,6 +18,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='course',
             name='code',
-            field=models.CharField(default='UNKN101', max_length=20, unique=True),
+            field=models.CharField(max_length=20, default='', blank=True),
+        ),
+        migrations.RunPython(generate_unique_codes, reverse_code=migrations.RunPython.noop),
+        migrations.AlterField(
+            model_name='course',
+            name='code',
+            field=models.CharField(max_length=20, unique=True, default=''),
         ),
     ]
