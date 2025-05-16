@@ -67,19 +67,19 @@ This system was created for a university software engineering course to address 
 ---
 
 ## 📸 Screenshots
-*Doesn't show all features*
+*Doesn't show all available features*
 
 ### Login Page
-![Login Page](assets/login-page.png)
+![Login page with email and password fields](assets/login-page.png)
 
 ### Instructor Dashboard
-![Instructor Dashboard](assets/instructor-dashboard.png)
+![Instructor dashboard showing course list and enrollment requests](assets/instructor-dashboard.png)
 
 ### Enrollment Request Flow
-![Enrollment Request](assets/enrollment-request.png)
+![Student submitting override request and instructor approving it](assets/enrollment-request.png)
 
 ### Admin Panel
-![Admin Panel](assets/admin-panel.png)
+![Administrator interface for creating and managing courses](assets/admin-panel.png)
 
 
 ---
