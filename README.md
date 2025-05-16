@@ -57,10 +57,10 @@ This system was created for a university software engineering course to address 
     pip install -r requirements.txt
 
     # Apply migrations
-    python manage.py migrate
+    python3 manage.py migrate
 
     # Run the development server
-    python manage.py runserver
+    python3 manage.py runserver
 
 > You can create test accounts via the Django admin panel or load any included fixtures.
 
